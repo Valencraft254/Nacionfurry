@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Isla Pixel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Isla Furryland</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -11,14 +11,12 @@
   <canvas id="world"></canvas>
 
   <div id="ui">
-    <div id="character-select">
-      <button onclick="selectCharacter('fem')">Furro Femenino</button>
-      <button onclick="selectCharacter('masc')">Furro Masculino</button>
-    </div>
+    <button onclick="setMode('select')">Modo Construcción</button>
+    <button onclick="setMode('move')">Modo Mover</button>
 
     <div id="chat">
       <div id="messages"></div>
-      <input id="input" placeholder="Escribí un comando..." />
+      <input id="input" placeholder="Comandos..." />
     </div>
   </div>
 </div>
