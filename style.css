@@ -1,42 +1,72 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #111;
-  color: white;
+body{
+margin:0;
+background:#111;
+font-family:Arial;
+color:white;
 }
 
-#game-container {
-  display: flex;
-  height: 100vh;
+
+#game{
+display:flex;
+height:100vh;
 }
 
-canvas {
-  flex: 1;
-  background: #3aa0ff;
-  cursor: crosshair;
+
+canvas{
+flex:1;
+background:#2584d8;
 }
 
-#ui {
-  width: 280px;
-  background: #1c1c1c;
-  padding: 10px;
+
+#panel{
+
+width:280px;
+background:#202020;
+padding:15px;
+box-shadow:-5px 0 15px black;
+
 }
 
-button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  cursor: pointer;
+
+h1{
+text-align:center;
 }
 
-#chat {
-  margin-top: 10px;
+
+.box{
+
+background:#303030;
+padding:10px;
+margin-top:15px;
+border-radius:12px;
+
 }
 
-#messages {
-  height: 200px;
-  overflow-y: auto;
-  background: black;
-  padding: 5px;
-  font-size: 12px;
+
+#time{
+
+background:#444;
+padding:10px;
+border-radius:10px;
+text-align:center;
+
+}
+
+
+#chat{
+
+height:150px;
+overflow:auto;
+background:#000;
+padding:5px;
+
+}
+
+
+input{
+
+width:100%;
+padding:8px;
+margin-top:5px;
+
 }
