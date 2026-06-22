@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background: #111;
   font-family: sans-serif;
+  background: #111;
   color: white;
 }
 
@@ -12,29 +12,31 @@ body {
 
 canvas {
   flex: 1;
-  background: linear-gradient(#2b8cff, #1b5fa8); /* mar */
+  background: #3aa0ff;
+  cursor: crosshair;
 }
 
 #ui {
-  width: 300px;
-  background: #1a1a1a;
-  display: flex;
-  flex-direction: column;
+  width: 280px;
+  background: #1c1c1c;
+  padding: 10px;
+}
+
+button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  cursor: pointer;
 }
 
 #chat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  margin-top: 10px;
 }
 
 #messages {
-  flex: 1;
+  height: 200px;
   overflow-y: auto;
-  padding: 10px;
+  background: black;
+  padding: 5px;
+  font-size: 12px;
 }
-
-#input {
-  padding: 10px;
-  border: none;
-  }
