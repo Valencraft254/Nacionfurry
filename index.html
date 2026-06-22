@@ -1,26 +1,61 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Isla Furryland</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Isla Sandbox</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="game-container">
-  <canvas id="world"></canvas>
+<div id="game">
 
-  <div id="ui">
-    <button onclick="setMode('select')">Modo Construcción</button>
-    <button onclick="setMode('move')">Modo Mover</button>
+<canvas id="world"></canvas>
 
-    <div id="chat">
-      <div id="messages"></div>
-      <input id="input" placeholder="Comandos..." />
-    </div>
-  </div>
+<div id="panel">
+
+<h1>🏝️ Isla</h1>
+
+<div id="time">
+☀️ Día 1<br>
+⏰ 08:00
 </div>
 
+<div class="box">
+<h3>🎒 Inventario</h3>
+
+<div>🪵 Madera:
+<span id="wood">0</span></div>
+
+<div>🪨 Piedra:
+<span id="stone">0</span></div>
+
+<div>🌱 Tierra:
+<span id="dirt">0</span></div>
+
+<div>🍎 Comida:
+<span id="food">0</span></div>
+
+</div>
+
+
+<div class="box">
+<h3>💬 Chat</h3>
+
+<div id="chat"></div>
+
+<input id="msg"
+placeholder="Mensaje...">
+
+</div>
+
+
+</div>
+
+</div>
+
+
 <script src="game.js"></script>
+
 </body>
 </html>
