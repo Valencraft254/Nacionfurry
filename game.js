@@ -1,199 +1,305 @@
-const canvas = document.getElementById("world");
-const ctx = canvas.getContext("2d");
+const canvas =
+document.getElementById("world");
 
-canvas.width = window.innerWidth - 280;
-canvas.height = window.innerHeight;
+const ctx =
+canvas.getContext("2d");
 
-// 🌍 isla
-const island = {
-  x: canvas.width / 2,
-  y: canvas.height / 2,
-  r: 200
+
+canvas.width =
+innerWidth-280;
+
+canvas.height =
+innerHeight;
+
+
+// TIEMPO
+
+const dayLength =
+3*60*60*1000;
+
+
+let day=1;
+
+
+
+function updateTime(){
+
+let p=(Date.now()%dayLength)
+/dayLength;
+
+
+let hour=Math.floor(p*24);
+
+
+document.getElementById("time")
+.innerHTML=
+(hour<6?"🌙 Noche":
+hour<18?"☀️ Día":"🌆 Tarde")
++
+"<br>Día "+day+
+"<br>⏰ "+hour+":00";
+
+
+day=Math.floor(Date.now()/dayLength)+1;
+
+}
+
+
+
+setInterval(updateTime,1000);
+
+
+
+// INVENTARIO
+
+
+let inv={
+
+wood:0,
+stone:0,
+dirt:0,
+food:0
+
 };
 
-// 👤 jugador
-const player = {
-  x: island.x,
-  y: island.y,
-  size: 10,
-  speed: 2
+
+
+function updateInv(){
+
+for(let i in inv){
+
+document.getElementById(i)
+.innerHTML=inv[i];
+
+}
+
+}
+
+
+
+// RECURSOS
+
+
+let resources=[];
+
+
+for(let i=0;i<40;i++){
+
+resources.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+
+type:
+["wood","stone","dirt","food"]
+[Math.floor(Math.random()*4)]
+
+});
+
+}
+
+
+
+// PLAYER
+
+
+let player={
+
+x:400,
+y:300,
+speed:3
+
 };
 
-// 🌳 árboles
-const trees = [];
-for (let i = 0; i < 30; i++) {
-  trees.push({
-    x: island.x + (Math.random() - 0.5) * 300,
-    y: island.y + (Math.random() - 0.5) * 300
-  });
+
+let keys={};
+
+
+
+onkeydown=e=>
+keys[e.key]=true;
+
+
+onkeyup=e=>
+keys[e.key]=false;
+
+
+
+function move(){
+
+if(keys.w)player.y-=player.speed;
+if(keys.s)player.y+=player.speed;
+if(keys.a)player.x-=player.speed;
+if(keys.d)player.x+=player.speed;
+
 }
 
-// 🏠 casas
-const houses = [];
 
-// 🎮 controles
-let mode = "move";
-const keys = {};
-let drag = null;
 
-// ---------------- INPUT TECLAS ----------------
-document.addEventListener("keydown", (e) => {
-  keys[e.key.toLowerCase()] = true;
+
+// CLICK RECOGER
+
+
+canvas.onclick=e=>{
+
+
+let mx=e.offsetX;
+let my=e.offsetY;
+
+
+resources.forEach((r,i)=>{
+
+
+let d=Math.hypot(
+r.x-mx,
+r.y-my
+);
+
+
+if(d<20){
+
+inv[r.type]+=1;
+
+resources.splice(i,1);
+
+updateInv();
+
+}
+
 });
 
-document.addEventListener("keyup", (e) => {
-  keys[e.key.toLowerCase()] = false;
+
+};
+
+
+
+// DIBUJO
+
+
+function draw(){
+
+
+ctx.clearRect(
+0,0,
+canvas.width,
+canvas.height
+);
+
+
+// mar
+
+ctx.fillStyle="#1684d4";
+ctx.fillRect(
+0,0,
+canvas.width,
+canvas.height
+);
+
+
+// isla
+
+ctx.fillStyle="#cdb276";
+ctx.beginPath();
+
+ctx.arc(
+canvas.width/2,
+canvas.height/2,
+250,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+ctx.fillStyle="#4fa83d";
+
+ctx.beginPath();
+
+ctx.arc(
+canvas.width/2,
+canvas.height/2,
+210,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+
+// recursos
+
+
+resources.forEach(r=>{
+
+ctx.fillStyle=
+r.type=="wood"?"green":
+r.type=="stone"?"gray":
+r.type=="food"?"red":
+"#a56b2b";
+
+
+ctx.fillRect(
+r.x,
+r.y,
+15,
+15
+);
+
+
 });
 
-// ---------------- MODOS ----------------
-function setMode(m) {
-  mode = m;
-  addMsg("Sistema", "Modo: " + m);
+
+
+// jugador
+
+ctx.fillStyle="yellow";
+
+ctx.beginPath();
+
+ctx.arc(
+player.x,
+player.y,
+12,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+move();
+
+
+requestAnimationFrame(draw);
+
 }
 
-// ---------------- PLAYER MOVEMENT ----------------
-function updatePlayer() {
-  if (mode !== "move") return;
 
-  if (keys["w"] || keys["arrowup"]) player.y -= player.speed;
-  if (keys["s"] || keys["arrowdown"]) player.y += player.speed;
-  if (keys["a"] || keys["arrowleft"]) player.x -= player.speed;
-  if (keys["d"] || keys["arrowright"]) player.x += player.speed;
+draw();
 
-  // límite isla
-  const dx = player.x - island.x;
-  const dy = player.y - island.y;
-  const dist = Math.sqrt(dx * dx + dy * dy);
+updateInv();
 
-  if (dist > island.r - 10) {
-    player.x -= dx * 0.05;
-    player.y -= dy * 0.05;
-  }
+
+// CHAT
+
+
+let input=
+document.getElementById("msg");
+
+
+input.onkeydown=e=>{
+
+if(e.key=="Enter"){
+
+let c=document.getElementById("chat");
+
+c.innerHTML+=
+"<div>👤 "+input.value+"</div>";
+
+input.value="";
+
 }
 
-// ---------------- DRAW ----------------
-function drawIsland() {
-  // mar
-  ctx.fillStyle = "#2c7be5";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // playa
-  ctx.beginPath();
-  ctx.arc(island.x, island.y, island.r + 30, 0, Math.PI * 2);
-  ctx.fillStyle = "#d9c28f";
-  ctx.fill();
-
-  // tierra
-  ctx.beginPath();
-  ctx.arc(island.x, island.y, island.r, 0, Math.PI * 2);
-  ctx.fillStyle = "#3d8f3d";
-  ctx.fill();
-}
-
-function drawTrees() {
-  for (let t of trees) {
-    ctx.fillStyle = "green";
-    ctx.beginPath();
-    ctx.arc(t.x, t.y, 6, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function drawHouses() {
-  for (let h of houses) {
-    ctx.fillStyle = "#8b5a2b";
-    ctx.fillRect(h.x, h.y, h.w, h.h);
-  }
-}
-
-function drawPlayer() {
-  ctx.fillStyle = "yellow";
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function drawSelection() {
-  if (!drag) return;
-  ctx.strokeStyle = "white";
-  ctx.strokeRect(drag.x, drag.y, drag.w, drag.h);
-}
-
-// ---------------- LOOP ----------------
-function loop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  drawIsland();
-  drawTrees();
-  drawHouses();
-
-  updatePlayer();
-  drawPlayer();
-
-  drawSelection();
-
-  requestAnimationFrame(loop);
-}
-loop();
-
-// ---------------- CLICK DRAG (CASAS) ----------------
-canvas.addEventListener("mousedown", (e) => {
-  if (mode !== "select") return;
-
-  drag = {
-    x: e.offsetX,
-    y: e.offsetY,
-    w: 0,
-    h: 0
-  };
-});
-
-canvas.addEventListener("mousemove", (e) => {
-  if (!drag) return;
-
-  drag.w = e.offsetX - drag.x;
-  drag.h = e.offsetY - drag.y;
-});
-
-canvas.addEventListener("mouseup", () => {
-  if (!drag) return;
-
-  houses.push({
-    x: drag.x,
-    y: drag.y,
-    w: drag.w,
-    h: drag.h
-  });
-
-  addMsg("Sistema", "Casa construida");
-  drag = null;
-});
-
-// ---------------- CHAT ----------------
-const input = document.getElementById("input");
-const messages = document.getElementById("messages");
-
-function addMsg(user, text) {
-  const div = document.createElement("div");
-  div.textContent = `${user}: ${text}`;
-  messages.appendChild(div);
-}
-
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    handleCommand(input.value);
-    input.value = "";
-  }
-});
-
-function handleCommand(cmd) {
-  addMsg("Tú", cmd);
-
-  if (cmd === "/help") {
-    addMsg("Sistema", "/help /mode move /mode select");
-  }
-
-  if (cmd.startsWith("/mode")) {
-    setMode(cmd.split(" ")[1]);
-  }
-                          }
+};
